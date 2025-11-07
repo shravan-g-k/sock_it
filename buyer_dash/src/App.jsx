@@ -4,6 +4,8 @@ import Navbar from './components/Navbar'
 import Discovery from './pages/Discovery'
 import { Component } from 'react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import {useState} from 'react'
+import SignIn from './components/SignIn'
 
 // Error boundary to catch DevTools errors and prevent blank page
 class ErrorBoundary extends Component {
@@ -50,14 +52,15 @@ class ErrorBoundary extends Component {
 }
 
 function App() {
+  const [loggedIn,SetLoggedIn]=useState(false)
   return (
     <ErrorBoundary>
       <Router>
         <div className="app">
           <Navbar />
           <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/discovery" element={<Discovery />} />
+            <Route path="/" element={!loggedIn?<SignIn onLogIn={() => SetLoggedIn(true)} />:<Home />} />
+            <Route path="/discovery" element={!loggedIn?<SignIn onLogIn={() => SetLoggedIn(true)}/>:<Discovery />} />
           </Routes>
         </div>
       </Router>
