@@ -9,7 +9,7 @@ function LoadingSpinner() {
   return <div className="spinner" />;
 }
 
-function LoadedModel({ gltfRef }) {
+function LoadedModel({ gltfRef, onModelLoaded }) {
   // load gltf and store its scene reference for parent to inspect
   // use import.meta.url so Vite treats the .glb as an asset (avoid parsing it as JS)
   const url = new URL('../assets/tower_house_design.glb', import.meta.url).href;
@@ -20,8 +20,12 @@ function LoadedModel({ gltfRef }) {
       // debug: log that model loaded
       // eslint-disable-next-line no-console
       console.log('LoadedModel: scene set on gltfRef', gltf.scene);
+      // Notify parent that model has loaded
+      if (onModelLoaded) {
+        onModelLoaded();
+      }
     }
-  }, [gltf, gltfRef]);
+  }, [gltf, gltfRef, onModelLoaded]);
 
   return <primitive object={gltf.scene} />;
 }
@@ -30,6 +34,7 @@ function CameraController({ selection, gltfRef, controlsRef }) {
   const { camera } = useThree();
   const animRef = useRef(null);
   const defaultZoomDuration = 700;
+  const autoRotateStateRef = useRef(false);
 
   const focusOnNode = (targetNode, duration = defaultZoomDuration) => {
     if (!targetNode) return;
@@ -37,41 +42,75 @@ function CameraController({ selection, gltfRef, controlsRef }) {
     const box = new Box3();
     box.setFromObject(targetNode);
     
-    let center, radius;
+    let center, size;
     if (box.isEmpty()) {
       center = new Vector3();
       targetNode.getWorldPosition(center);
-      radius = 2;
+      size = new Vector3(2, 2, 2); // Default size if bounding box is empty
     } else {
       center = box.getCenter(new Vector3());
-      const size = box.getSize(new Vector3());
-      radius = size.length() / 2;
+      size = box.getSize(new Vector3());
     }
+
+    // Calculate the diagonal of the bounding box to determine optimal viewing distance
+    const diagonal = Math.sqrt(size.x * size.x + size.y * size.y + size.z * size.z);
+    // Position camera at a distance that shows the entire object with some padding
+    // Use a multiplier to ensure good viewing distance (2.5x the diagonal)
+    const distance = Math.max(diagonal * 2.5, 1.5);
+    
+    // Calculate optimal viewing angle (slightly above and in front)
+    // Use a nice isometric-like angle
+    const angle = Math.PI / 4; // 45 degrees
+    const heightOffset = size.y * 0.3; // Slightly above center
+    
+    // Calculate camera position with good viewing angle
+    const cameraOffset = new Vector3(
+      Math.sin(angle) * distance,
+      heightOffset + distance * 0.5,
+      Math.cos(angle) * distance
+    );
+    
+    const endPos = center.clone().add(cameraOffset);
+    const endTarget = center.clone();
 
     const startPos = camera.position.clone();
     const startTarget = controlsRef.current ? controlsRef.current.target.clone() : new Vector3(0, 0, 0);
 
-    // Calculate optimal camera position
-    const dir = camera.getWorldDirection(new Vector3()).normalize();
-    const distance = Math.max(radius * 2.2, 1.5);
-    const endPos = center.clone().add(dir.clone().multiplyScalar(-distance));
-    const endTarget = center.clone();
+    // Temporarily disable auto-rotate during zoom for better focus
+    if (controlsRef.current) {
+      autoRotateStateRef.current = controlsRef.current.autoRotate;
+      controlsRef.current.autoRotate = false;
+    }
 
     const startTime = performance.now();
 
     if (animRef.current) cancelAnimationFrame(animRef.current);
 
     function animate(now) {
-      const t = Math.min(1, (now - startTime) / duration);
-      // Use smooth easing
-      const ease = t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
+      const elapsed = now - startTime;
+      const t = Math.min(1, elapsed / duration);
+      // Smooth easing function (ease-in-out cubic)
+      const ease = t < 0.5 
+        ? 4 * t * t * t 
+        : 1 - Math.pow(-2 * t + 2, 3) / 2;
       
       camera.position.lerpVectors(startPos, endPos, ease);
       if (controlsRef.current) {
         controlsRef.current.target.lerpVectors(startTarget, endTarget, ease);
         controlsRef.current.update();
       }
-      if (t < 1) animRef.current = requestAnimationFrame(animate);
+      if (t < 1) {
+        animRef.current = requestAnimationFrame(animate);
+      } else {
+        // Ensure we're exactly at the target position
+        camera.position.copy(endPos);
+        if (controlsRef.current) {
+          controlsRef.current.target.copy(endTarget);
+          // Re-enable auto-rotate after zoom completes (if it was enabled before)
+          controlsRef.current.autoRotate = autoRotateStateRef.current;
+          controlsRef.current.update();
+        }
+      }
     }
 
     animRef.current = requestAnimationFrame(animate);
@@ -128,10 +167,13 @@ function CameraController({ selection, gltfRef, controlsRef }) {
   return null;
 }
 
-const ModelViewer = forwardRef(function ModelViewer({ selection: externalSelection, onNodeSelect }, ref) {
+const ModelViewer = forwardRef(function ModelViewer({ selection: externalSelection, onNodeSelect, onModelLoaded: onModelLoadedProp }, ref) {
   const controlsRef = useRef();
   const gltfRef = useRef(null);
   
+  // State to track when model is loaded (triggers re-render)
+  const [modelLoaded, setModelLoaded] = useState(false);
+
   // Forward the gltfRef to parent through ref (support function or object refs)
   useEffect(() => {
     if (!ref) return;
@@ -139,16 +181,37 @@ const ModelViewer = forwardRef(function ModelViewer({ selection: externalSelecti
       if (typeof ref === 'function') {
         // pass the ref object so parent can read .current as it changes
         ref(gltfRef);
-      } else if (typeof ref === 'object') {
+      } else if (typeof ref === 'object' && ref !== null) {
         // set parent's ref.current to the same scene when available
-        // (we don't overwrite the ref object itself)
-        // assign current when model loads
         if (gltfRef.current) ref.current = gltfRef.current;
       }
     } catch (e) {
       // ignore
     }
-  }, [ref, gltfRef.current]);
+  }, [ref]);
+
+  // Update parent ref when model loads
+  useEffect(() => {
+    if (!ref || !modelLoaded) return;
+    try {
+      if (typeof ref === 'function') {
+        // Call the ref callback again to notify parent that model has loaded
+        ref(gltfRef);
+      } else if (typeof ref === 'object' && ref !== null) {
+        ref.current = gltfRef.current;
+      }
+    } catch (e) {
+      // ignore
+    }
+  }, [modelLoaded, ref]);
+
+  const handleModelLoaded = () => {
+    setModelLoaded(true);
+    // Notify parent component that model has loaded
+    if (onModelLoadedProp) {
+      onModelLoadedProp();
+    }
+  };
   const [selectedNode, setSelectedNode] = useState(null);
   const [selection, setSelection] = useState(externalSelection);
 
@@ -180,7 +243,7 @@ const ModelViewer = forwardRef(function ModelViewer({ selection: externalSelecti
       <Canvas shadows camera={{ position: [0, 0, 8], fov: 50 }}>
         <Suspense fallback={<Html style={{ pointerEvents: 'none' }}><LoadingSpinner /></Html>}>
           <Stage environment="city" intensity={0.6}>
-            <LoadedModel gltfRef={gltfRef} />
+            <LoadedModel gltfRef={gltfRef} onModelLoaded={handleModelLoaded} />
           </Stage>
           <OrbitControls ref={controlsRef} autoRotate />
           <CameraController selection={selection} gltfRef={gltfRef} controlsRef={controlsRef} />

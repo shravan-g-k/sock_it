@@ -1,5 +1,4 @@
 import styles from '../css/Sidebar.module.css';
-import RoomLayout from './RoomLayout';
 import NodesPanel from './NodesPanel';
 
 const sampleData = [
@@ -8,12 +7,12 @@ const sampleData = [
     title: 'Luxury Tower A',
     location: 'Building A',
     price: '$250,000',
-    status: 'Available',
+  
     floors: [
-      { name: 'Floor 15 - Unit A1', rooms: [ { name: 'Living Room', size: 'large' }, { name: 'Master Bed', size: 'large' }, { name: 'Bath', size: 'small' } ] },
-      { name: 'Floor 15 - Unit A2', rooms: [ { name: 'Living Room', size: 'large' }, { name: 'Kitchen', size: 'medium' }, { name: 'Bedroom', size: 'medium' } ] },
-      { name: 'Floor 15 - Unit A3', rooms: [ { name: 'Studio', size: 'large' }, { name: 'Kitchenette', size: 'small' }, { name: 'Bath', size: 'small' } ] },
-      { name: 'Floor 15 - Unit A4', rooms: [ { name: 'Living Room', size: 'large' }, { name: 'Guest Room', size: 'medium' }, { name: 'Bath', size: 'small' } ] }
+      { name: 'Floor 15 - Unit A1' },
+      { name: 'Floor 15 - Unit A2' },
+      { name: 'Floor 15 - Unit A3' },
+      { name: 'Floor 15 - Unit A4' }
     ],
     modelPath: '/src/assets/tower_house_design.glb'
   },
@@ -22,11 +21,11 @@ const sampleData = [
     title: 'Family Block B',
     location: 'Building B',
     price: '$180,000',
-    status: 'Available',
+    
     floors: [
-      { name: 'Floor 12 - Unit B1', rooms: [ { name: 'Living Room', size: 'large' }, { name: 'Kitchen', size: 'medium' }, { name: 'Bedroom 1', size: 'medium' } ] },
-      { name: 'Floor 12 - Unit B2', rooms: [ { name: 'Living Room', size: 'large' }, { name: 'Bedroom 1', size: 'medium' }, { name: 'Bedroom 2', size: 'medium' } ] },
-      { name: 'Floor 12 - Unit B3', rooms: [ { name: 'Living Room', size: 'large' }, { name: 'Kitchen', size: 'medium' }, { name: 'Bath', size: 'small' } ] }
+      { name: 'Floor 12 - Unit B1', status: 'Sold' },
+      { name: 'Floor 12 - Unit B2', status: 'Sold' },
+      { name: 'Floor 12 - Unit B3', status: 'Available' }
     ],
     modelPath: '/src/assets/tower_house_design.glb'
   },
@@ -35,11 +34,11 @@ const sampleData = [
     title: 'Premium Block C',
     location: 'Building C',
     price: '$350,000',
-    status: 'Reserved',
+  
     floors: [
-      { name: 'Floor 20 - Unit C1', rooms: [ { name: 'Living Room', size: 'large' }, { name: 'Kitchen', size: 'large' }, { name: 'Master Bed', size: 'large' } ] },
-      { name: 'Floor 20 - Unit C2', rooms: [ { name: 'Living Room', size: 'large' }, { name: 'Guest Room', size: 'medium' }, { name: 'Bath 1', size: 'small' } ] },
-      { name: 'Floor 20 - Unit C3', rooms: [ { name: 'Studio', size: 'large' }, { name: 'Kitchen', size: 'small' }, { name: 'Bath', size: 'small' } ] }
+      { name: 'Floor 20 - Unit C1', status: 'Sold' },
+      { name: 'Floor 20 - Unit C2', status: 'Available' },
+      { name: 'Floor 20 - Unit C3', status: 'Available' }
     ],
     modelPath: '/src/assets/tower_house_design.glb'
   },
@@ -48,10 +47,11 @@ const sampleData = [
     title: 'Studio Block D',
     location: 'Building D',
     price: '$120,000',
-    status: 'Available',
+   
     floors: [
-      { name: 'Floor 8 - Unit D1', rooms: [ { name: 'Living/Bed', size: 'large' }, { name: 'Kitchen', size: 'small' }, { name: 'Bath', size: 'small' } ] },
-      { name: 'Floor 8 - Unit D2', rooms: [ { name: 'Studio', size: 'large' }, { name: 'Kitchenette', size: 'small' }, { name: 'Bath', size: 'small' } ] }
+      { name: 'Floor 8 - Unit D1' },
+      { name: 'Floor 8 - Unit D2' },
+      {name :'Floor 8 - Unit D3'}
     ],
     modelPath: '/src/assets/tower_house_design.glb'
   }
@@ -60,7 +60,7 @@ const sampleData = [
   onClick: () => console.log(`Selected apartment group: ${item.title}`)
 }));
 
-export default function Sidebar({ onSelect, gltfRef, onNodeSelect, selectedNode }) {
+export default function Sidebar({ onSelect, gltfRef, onNodeSelect, selectedNode, modelLoaded }) {
   return (
     <div className={styles.sidebar}>
       <div className={styles.sectionHeader}>Building Nodes</div>
@@ -68,6 +68,7 @@ export default function Sidebar({ onSelect, gltfRef, onNodeSelect, selectedNode 
         gltfRef={gltfRef}
         onNodeSelect={onNodeSelect}
         selectedNode={selectedNode}
+        modelLoaded={modelLoaded}
       />
       {sampleData.map((item) => (
         <div key={item.id} className={styles.row} onClick={item.onClick}>
@@ -83,24 +84,34 @@ export default function Sidebar({ onSelect, gltfRef, onNodeSelect, selectedNode 
           </div>
 
           <div className={styles.floorsContainer}>
-            {item.floors.map((floor, idx) => (
-              <div
-                key={idx}
-                className={styles.floorCard}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  // could open floor details; by default do nothing
-                }}
-              >
-                <div className={styles.floorLabel}>{floor.name}</div>
-                <RoomLayout
-                  rooms={floor.rooms}
-                  buildingId={item.id}
-                  floorName={floor.name}
-                  onRoomClick={(payload) => onSelect && onSelect({ buildingId: item.id, floorName: floor.name, roomName: payload.roomName })}
-                />
+            {item.floors && item.floors.length > 0 ? (
+              item.floors.map((floor, idx) => {
+                const floorStatus = floor.status || 'Available';
+                const isSold = floorStatus === 'Sold' || floorStatus === 'Reserved';
+                return (
+                  <div
+                    key={idx}
+                    className={`${styles.floorCard} ${isSold ? styles.sold : styles.available}`}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      if (!isSold && onSelect) {
+                        onSelect({ buildingId: item.id, floorName: floor.name });
+                      }
+                    }}
+                    title={isSold ? 'Sold/Reserved' : 'Available - Click to view'}
+                  >
+                    <div className={styles.floorLabel}>{floor.name}</div>
+                    <div className={styles.statusLabel}>
+                      {isSold ? 'SOLD' : 'AVAILABLE'}
+                    </div>
+                  </div>
+                );
+              })
+            ) : (
+              <div className={styles.floorCard}>
+                <div className={styles.floorLabel}>No floors available</div>
               </div>
-            ))}
+            )}
           </div>
         </div>
       ))}

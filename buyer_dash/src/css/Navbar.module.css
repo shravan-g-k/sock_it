@@ -24,6 +24,27 @@
   color: #8B3208;
 }
 
+.navLinks {
+  display: flex;
+  gap: 24px;
+  align-items: center;
+}
+
+.navLink {
+  color: #333;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 1rem;
+  transition: color 0.2s ease;
+  padding: 8px 16px;
+  border-radius: 6px;
+}
+
+.navLink:hover {
+  color: #B7410E;
+  background-color: #FFF5F2;
+}
+
 .profileContainer {
   position: relative;
 }

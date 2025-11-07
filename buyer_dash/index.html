@@ -8,6 +8,108 @@
   </head>
   <body>
     <div id="root"></div>
+    <!-- Patch React DevTools before React loads to prevent semver errors -->
+    <script>
+      // This must run before React and React Three Fiber load
+      (function() {
+        'use strict';
+        
+        // Wait for DevTools hook to be available
+        function patchDevTools() {
+          const hook = window.__REACT_DEVTOOLS_GLOBAL_HOOK__;
+          if (!hook) {
+            // Retry if hook doesn't exist yet
+            setTimeout(patchDevTools, 5);
+            return;
+          }
+
+          try {
+            // Patch registerRendererInterface - this is where the error occurs
+            if (hook.registerRendererInterface) {
+              const original = hook.registerRendererInterface;
+              hook.registerRendererInterface = function(rendererInterface) {
+                try {
+                  // Fix empty version strings before registration
+                  if (rendererInterface && rendererInterface.renderer) {
+                    const renderer = rendererInterface.renderer;
+                    if (renderer && typeof renderer.version === 'string') {
+                      if (!renderer.version || renderer.version.trim() === '') {
+                        renderer.version = '0.0.0';
+                      }
+                    } else if (renderer && (renderer.version === null || renderer.version === undefined)) {
+                      renderer.version = '0.0.0';
+                    }
+                  }
+                  return original.apply(this, arguments);
+                } catch (e) {
+                  // Silently handle errors to prevent app crash
+                  try {
+                    return original.apply(this, arguments);
+                  } catch (e2) {
+                    // If even that fails, just return null
+                    return null;
+                  }
+                }
+              };
+            }
+
+            // Patch the register method as backup
+            if (hook.register) {
+              const originalRegister = hook.register;
+              hook.register = function(renderer) {
+                try {
+                  if (renderer) {
+                    if (typeof renderer.version === 'string' && (!renderer.version || renderer.version.trim() === '')) {
+                      renderer.version = '0.0.0';
+                    } else if (renderer.version === null || renderer.version === undefined) {
+                      renderer.version = '0.0.0';
+                    }
+                  }
+                  return originalRegister.apply(this, arguments);
+                } catch (e) {
+                  // Continue without DevTools if registration fails
+                  return null;
+                }
+              };
+            }
+
+            // Clean up any existing renderers with empty versions
+            if (hook.renderers) {
+              try {
+                if (hook.renderers instanceof Map) {
+                  hook.renderers.forEach(function(renderer) {
+                    if (renderer && typeof renderer.version === 'string' && (!renderer.version || renderer.version.trim() === '')) {
+                      renderer.version = '0.0.0';
+                    }
+                  });
+                } else if (Array.isArray(hook.renderers)) {
+                  hook.renderers.forEach(function(renderer) {
+                    if (renderer && typeof renderer.version === 'string' && (!renderer.version || renderer.version.trim() === '')) {
+                      renderer.version = '0.0.0';
+                    }
+                  });
+                }
+              } catch (e) {
+                // Ignore cleanup errors
+              }
+            }
+          } catch (e) {
+            // If patching fails, the app should still work without DevTools
+            console.warn('React DevTools patch failed (non-critical)');
+          }
+        }
+
+        // Start patching immediately
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', patchDevTools);
+        } else {
+          patchDevTools();
+        }
+
+        // Also patch on next tick in case hook appears later
+        setTimeout(patchDevTools, 0);
+      })();
+    </script>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>

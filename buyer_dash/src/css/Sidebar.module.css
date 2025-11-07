@@ -50,22 +50,75 @@
 .floorsContainer::-webkit-scrollbar-thumb { background: #B7410E; border-radius: 4px }
 
 .floorCard {
-    min-width: 220px;
-    max-width: 260px;
-    background: #fff;
+    min-width: 120px;
+    max-width: 140px;
     border-radius: 8px;
-    padding: 10px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-    border: 1px solid #f0f0f0;
+    padding: 12px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    border: 2px solid;
     display: flex;
     flex-direction: column;
+    align-items: center;
+    justify-content: center;
     gap: 8px;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.floorCard.available {
+    background: #d4edda;
+    border-color: #28a745;
+    cursor: pointer;
+}
+
+.floorCard.available:hover {
+    background: #c3e6cb;
+    border-color: #218838;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(40, 167, 69, 0.3);
+}
+
+.floorCard.sold {
+    background: #f8d7da;
+    border-color: #dc3545;
+    cursor: not-allowed;
+    opacity: 0.9;
+}
+
+.floorCard.sold:hover {
+    opacity: 1;
+    background: #f5c6cb;
+    border-color: #c82333;
 }
 
 .floorLabel {
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     color: #333;
     font-weight: 600;
+    text-align: center;
+}
+
+.statusLabel {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-align: center;
+    padding: 4px 8px;
+    border-radius: 4px;
+}
+
+.floorCard.available .statusLabel {
+    color: #155724;
+    background: rgba(40, 167, 69, 0.2);
+}
+
+.floorCard.sold .statusLabel {
+    color: #721c24;
+    background: rgba(220, 53, 69, 0.2);
+}
+
+.floorCard.sold .floorLabel {
+    color: #555;
 }
 
 .row:hover {

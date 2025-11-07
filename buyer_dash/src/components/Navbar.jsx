@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import styles from '../css/Navbar.module.css';
 
 export default function Navbar() {
@@ -10,9 +11,17 @@ export default function Navbar() {
 
   return (
     <nav className={styles.navbar}>
-      <a href="/" className={styles.logo}>
+      <Link to="/" className={styles.logo}>
         SOCK .it
-      </a>
+      </Link>
+      <div className={styles.navLinks}>
+        <Link to="/" className={styles.navLink}>
+          Home
+        </Link>
+        <Link to="/discovery" className={styles.navLink}>
+          Discovery
+        </Link>
+      </div>
       <div className={styles.profileContainer}>
         <div className={styles.profileIcon} onClick={toggleDropdown}>
           <svg

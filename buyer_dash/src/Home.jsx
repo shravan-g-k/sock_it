@@ -7,6 +7,7 @@ export default function Home() {
   const [selection, setSelection] = useState(null);
   const [selectedNode, setSelectedNode] = useState(null);
   const [modelRef, setModelRef] = useState(null);
+  const [modelLoaded, setModelLoaded] = useState(false);
 
   // selection shape: { buildingId, floorName, roomName }
   const handleSelect = (payload) => {
@@ -15,11 +16,20 @@ export default function Home() {
 
   const handleNodeSelect = (node) => {
     setSelectedNode(node);
+    // Also update selection to trigger camera zoom on the node
+    if (node && node.uuid) {
+      setSelection({ nodeId: node.uuid });
+    }
   };
 
   const handleModelRef = (ref) => {
     console.log("Model ref updated:", ref);
     setModelRef(ref);
+  };
+
+  const handleModelLoaded = () => {
+    console.log("Model loaded callback received in Home");
+    setModelLoaded(true);
   };
 
   return (
@@ -29,11 +39,13 @@ export default function Home() {
         gltfRef={modelRef}
         onNodeSelect={handleNodeSelect}
         selectedNode={selectedNode}
+        modelLoaded={modelLoaded}
       />
       <div className={styles.modelContainer}>
         <ModelViewer 
           selection={selection}
           onNodeSelect={handleNodeSelect}
+          onModelLoaded={handleModelLoaded}
           ref={handleModelRef}
         />
       </div>

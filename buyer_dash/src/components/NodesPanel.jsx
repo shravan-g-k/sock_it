@@ -2,11 +2,11 @@ import { useState, useEffect } from 'react';
 import { Box3, Vector3 } from 'three';
 import debugStyles from '../css/DebugPanel.module.css';
 
-export default function NodesPanel({ gltfRef, onNodeSelect, selectedNode }) {
+export default function NodesPanel({ gltfRef, onNodeSelect, selectedNode, modelLoaded }) {
   const [nodesList, setNodesList] = useState([]);
 
   useEffect(() => {
-    // Build nodes list whenever gltfRef changes
+    // Build nodes list whenever gltfRef changes or model loads
     if (!gltfRef?.current) {
       setNodesList([]);
       return;
@@ -24,13 +24,28 @@ export default function NodesPanel({ gltfRef, onNodeSelect, selectedNode }) {
       nodes.push({ name: n.name, center, size, uuid: n.uuid });
     });
     setNodesList(nodes);
-  }, [gltfRef]);
+  }, [gltfRef, modelLoaded]);
 
   return (
     <div className={debugStyles.debugPanel}>
       <div className={debugStyles.debugHeader}>
         <div>Scene nodes ({nodesList.length})</div>
       </div>
+      {!modelLoaded && (
+        <div className={debugStyles.debugSmall} style={{ padding: '8px', color: '#666' }}>
+          Loading model...
+        </div>
+      )}
+      {modelLoaded && !gltfRef?.current && (
+        <div className={debugStyles.debugSmall} style={{ padding: '8px', color: '#666' }}>
+          Model loaded but scene not available
+        </div>
+      )}
+      {nodesList.length === 0 && modelLoaded && gltfRef?.current && (
+        <div className={debugStyles.debugSmall} style={{ padding: '8px', color: '#666' }}>
+          No named nodes found in scene
+        </div>
+      )}
       <div className={debugStyles.debugList}>
         {nodesList.map((n, i) => (
           <div 
