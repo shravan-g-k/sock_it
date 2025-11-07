@@ -219,7 +219,7 @@ function App() {
         </div>
         <div className="profile-area">
           <button className="profile-button" onClick={() => setIsDropdownOpen(!isDropdownOpen)}>
-            <span className="material-icons">person_circle</span> My Profile
+            <span className="material-icons">person</span> My Profile
           </button>
           
           <div className={`profile-dropdown ${isDropdownOpen ? 'show' : ''}`}>
@@ -303,7 +303,7 @@ function App() {
             </div>
 
             <div className="right-column-extended">
-              <section className="card block-3-extended">
+              <section className="card-block-3-extended">
                 <h2>Digital Twin (3D Model) Capture</h2>
                 <p>Upload your final digital twin (GLB format) and verify the 3D preview.</p>
                 
@@ -378,7 +378,7 @@ function App() {
 
       {/* **FOOTER SECTION** - Adjusted for Lower Profile */}
       <footer className="low-profile-footer">
-        <p>&copy; 2025 PropAsset Token. All rights reserved. | Powered by Blockchain & Digital Twin Technology</p>
+        <p3>&copy; 2025 PropAsset Token. All rights reserved. | Powered by Blockchain & Digital Twin Technology</p3>
       </footer>
     </>
   );
