@@ -1,0 +1,19 @@
+.container {
+  display: flex;
+  width: 100%;
+  height: calc(100vh - 80px); /* Adjust based on your navbar height */
+  overflow: hidden;
+}
+
+.modelContainer {
+  flex: 1;
+  height: 100%;
+  background-color: #ffffff;
+  padding: 20px;
+}
+
+.content {
+  padding: 20px;
+  font-size: 1.2rem;
+  color: #666;
+}

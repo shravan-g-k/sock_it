@@ -1,0 +1,109 @@
+.sidebar {
+    width: 300px;
+    height: calc(100vh - 80px); /* Adjust based on your navbar height */
+    background-color: #ffffff;
+    border-right: 1px solid #e0e0e0;
+    overflow-y: auto;
+    padding: 20px;
+    box-shadow: 2px 0 4px rgba(0, 0, 0, 0.05);
+}
+
+.row {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 20px;
+    padding: 12px;
+    background-color: #f8f8f8;
+    border-radius: 8px;
+    transition: transform 0.15s ease;
+    cursor: pointer;
+}
+
+.row > .meta {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    align-items: center;
+}
+
+.floorsContainer {
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+    padding-bottom: 8px;
+}
+
+.floorsContainer::-webkit-scrollbar {
+    height: 8px;
+}
+.floorsContainer::-webkit-scrollbar-track { background: #f1f1f1 }
+.floorsContainer::-webkit-scrollbar-thumb { background: #B7410E; border-radius: 4px }
+
+.floorCard {
+    min-width: 220px;
+    max-width: 260px;
+    background: #fff;
+    border-radius: 8px;
+    padding: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    border: 1px solid #f0f0f0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.floorLabel {
+    font-size: 0.85rem;
+    color: #333;
+    font-weight: 600;
+}
+
+.row:hover {
+    transform: translateX(5px);
+    background-color: #FFF5F2;
+}
+
+.column {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #333;
+    margin: 0;
+}
+
+.subtitle {
+    font-size: 0.875rem;
+    color: #666;
+    margin: 0;
+}
+
+.value {
+    font-size: 1.125rem;
+    color: #B7410E;
+    font-weight: 500;
+    margin: 0;
+}
+
+/* Custom scrollbar */
+.sidebar::-webkit-scrollbar {
+    width: 6px;
+}
+
+.sidebar::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+    background: #B7410E;
+    border-radius: 3px;
+}
+
+.sidebar::-webkit-scrollbar-thumb:hover {
+    background: #8B3208;
+}

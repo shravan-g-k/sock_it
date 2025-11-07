@@ -1,0 +1,52 @@
+.roomLayout {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 10px;
+    padding: 10px;
+    background-color: #fff;
+    border-radius: 6px;
+}
+
+.roomsContainer {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-start;
+    overflow-x: auto;
+    padding-bottom: 6px;
+}
+
+.room {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+}
+
+.box {
+    width: 40px;
+    height: 40px;
+    border: 2px solid #B7410E;
+    border-radius: 4px;
+    position: relative;
+}
+
+.boxLarge {
+    width: 50px;
+    height: 45px;
+}
+
+.boxSmall {
+    width: 35px;
+    height: 35px;
+}
+
+.roomName {
+    font-size: 0.7rem;
+    color: #666;
+    text-align: center;
+    max-width: 50px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

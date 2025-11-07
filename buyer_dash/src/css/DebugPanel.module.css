@@ -1,0 +1,60 @@
+.debugPanel {
+  background: #f8f8f8;
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 20px;
+  font-family: system-ui, Arial, sans-serif;
+  font-size: 12px;
+  color: #222;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  border: 1px solid #f0f0f0;
+}
+
+.debugHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.debugList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.debugItem {
+  padding: 8px;
+  border-radius: 6px;
+  background: #fff;
+  border: 1px solid #f0f0f0;
+  transition: all 0.2s ease-in-out;
+}
+
+.debugItem:hover {
+  background: #f8f8f8;
+  border-color: #ddd;
+}
+
+.debugItem.selected {
+  background: #fff5f0;
+  border-color: #B7410E;
+}
+
+.debugItemName {
+  font-weight: 600;
+  color: #B7410E;
+  margin-bottom: 6px;
+}
+
+.debugSmall {
+  color: #555;
+  font-size: 11px;
+}
+
+.debugClose {
+  background: transparent;
+  border: none;
+  color: #666;
+  cursor: pointer;
+}
