@@ -1,9 +1,21 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
+import SignIn from './components/SignIn';
 
 function App() {
   // --- STATE MANAGEMENT ---
-  
+  const handleProfileClick =(action)=> {
+  setIsDropdownOpen(false); // Close dropdown
+
+  if(action === 'Log Out') {
+    SetLogIn(false); // Actually log out
+    return; // Stop further alerts
+  }
+
+  alert(`Navigating to: ${action}`);
+};
+
   // Form Input State (Controlled Components)
+const [loggedIn,SetLogIn]=useState(false);
   const [formState, setFormState] = useState({
     unitName: '',
     reraNumber: '',
@@ -203,16 +215,12 @@ function App() {
     });
   }, [validationErrors, formState]);
   
-  // Helper to handle profile actions and close dropdown
-  const handleProfileClick = (action) => {
-    setIsDropdownOpen(false); // Always close the dropdown
-    alert(`Navigating to: ${action}`);
-  };
-
+  
 
   return (
     <>
-      <header className="main-header">
+{!loggedIn?(<SignIn  onLogIn={()=>SetLogIn(true)} />):
+      (<div><header className="main-header">
         <div className="logo-area">
           <span className="material-icons logo-icon">home_work</span> 
           <span className="company-name">SOCK.it</span>
@@ -229,8 +237,8 @@ function App() {
             <button className="dropdown-item" onClick={() => handleProfileClick('Account Details')} data-action="account">
               <span className="material-icons">account_balance_wallet</span> Account Details
             </button>
-            <button className="dropdown-item logout" onClick={() => handleProfileClick('Log Out')} data-action="logout">
-              <span className="material-icons">logout</span> Log Out
+            <button className="dropdown-item logout" onClick={() => handleProfileClick('Log Out')}  data-action="logout">
+              <span className="material-icons" >logout</span> Log Out
             </button>
           </div>
         </div>
@@ -238,8 +246,8 @@ function App() {
 
       <div className="container">
         <main>
-          <h1>🏠 Asset Registration & Digital Twin Capture</h1>
-          <p>Enter the core details and required legal documentation for your property unit.</p>
+{/*           <h1>🏠 Asset Registration & Digital Twin Capture</h1>
+          <p>Enter the core details and required legal documentation for your property unit.</p> */}
 
           <form onSubmit={handleRegistration}>
           <div className="content-wrapper">
@@ -374,7 +382,8 @@ function App() {
           </div>
           </form>
         </main>
-      </div>
+      </div></div>)
+}
 
       {/* **FOOTER SECTION** - Adjusted for Lower Profile */}
       <footer className="low-profile-footer">

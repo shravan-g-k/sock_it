@@ -319,7 +319,7 @@ select:focus {
 
 .register-button {
   /* Gradient with the new color scheme */
-  background: linear-gradient(135deg, #5c2006, #8b3208);
+  background: #db5213;
   color: rgb(214, 207, 207);
   padding: 16px 26px;
   font-size: 17px;
@@ -359,7 +359,6 @@ select:focus {
   /* Gradient uses the new color scheme */
   background: linear-gradient(135deg, #5c2006, #8b3208); 
   color: white; /* Ensure text is visible */
-  margin-top: 40px;
   font-size: 14px;
   border-top: 1px solid #e0e0e0;
 }
@@ -394,4 +393,71 @@ select:focus {
   .container {
     padding: 20px;
   }
+}
+/* SignIn.css */
+.SignInContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #41424128;
+  font-family: 'Arial', sans-serif;
+  background-color: rgba(27, 27, 27, 0.185);
+}
+.box{
+  padding: 20px;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(27, 27, 27, 0);
+  width: 400px;
+}
+.SignInContainer .heading {
+  font-size: 2rem;
+  margin-bottom: 2rem;
+  color: #8b3208;
+  margin-bottom: 5px;
+  text-align: center;
+  font-weight: bold;
+}
+
+.SignInBtn {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem; /* space between icon and text */
+  background-color: white;
+  color: #a83e10;
+  font-weight: 600;
+  font-size: 1.2rem;
+  padding: 0.8rem 2rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 10px rgba(139, 50, 8, 0.4);
+  width:80%;
+  margin-top: 20px;
+}
+h3{
+  text-align: center;
+  color: #aa4114;
+}
+.SignInBtn:hover {
+  background-color: white;
+  transform: scale(1.05);
+}
+
+.SignInBtn:hover {
+  transition: scale(1.05);
+}
+
+.metamask-icon svg {
+  width: 24px;
+  height: 24px;
+}
+h1{
+  margin: 0px;
 }
