@@ -6,7 +6,9 @@ function App() {
   return (
     <div className="app">
       <Navbar />
-      <Home />
+  <Home />
+  {/* Temporarily disabled MyScene to isolate blank-page issues. Re-enable after debugging. */}
+  {/* <MyScene /> */}
     </div>
   )
 }

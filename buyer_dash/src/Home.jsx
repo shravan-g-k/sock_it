@@ -6,16 +6,20 @@ import styles from './css/Home.module.css';
 export default function Home() {
   const [selection, setSelection] = useState(null);
   const [selectedNode, setSelectedNode] = useState(null);
-  const [modelRef, setModelRef] = useState({ current: null });
+  const [modelRef, setModelRef] = useState(null);
 
-  // selection shape: { buildingId, floorName, roomName } or { nodeId }
+  // selection shape: { buildingId, floorName, roomName }
   const handleSelect = (payload) => {
     setSelection(payload);
   };
 
   const handleNodeSelect = (node) => {
     setSelectedNode(node);
-    setSelection({ nodeId: node.uuid });
+  };
+
+  const handleModelRef = (ref) => {
+    console.log("Model ref updated:", ref);
+    setModelRef(ref);
   };
 
   return (
@@ -29,7 +33,8 @@ export default function Home() {
       <div className={styles.modelContainer}>
         <ModelViewer 
           selection={selection}
-          onNodesUpdate={ref => setModelRef(ref)}
+          onNodeSelect={handleNodeSelect}
+          ref={handleModelRef}
         />
       </div>
     </div>

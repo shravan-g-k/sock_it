@@ -11,7 +11,7 @@ export default function Navbar() {
   return (
     <nav className={styles.navbar}>
       <a href="/" className={styles.logo}>
-        SockIt
+        SOCK .it
       </a>
       <div className={styles.profileContainer}>
         <div className={styles.profileIcon} onClick={toggleDropdown}>

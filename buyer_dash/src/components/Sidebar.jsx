@@ -13,7 +13,7 @@ const sampleData = [
       { name: 'Floor 15 - Unit A1', rooms: [ { name: 'Living Room', size: 'large' }, { name: 'Master Bed', size: 'large' }, { name: 'Bath', size: 'small' } ] },
       { name: 'Floor 15 - Unit A2', rooms: [ { name: 'Living Room', size: 'large' }, { name: 'Kitchen', size: 'medium' }, { name: 'Bedroom', size: 'medium' } ] },
       { name: 'Floor 15 - Unit A3', rooms: [ { name: 'Studio', size: 'large' }, { name: 'Kitchenette', size: 'small' }, { name: 'Bath', size: 'small' } ] },
-      { name: 'Floor 14 - Unit A4', rooms: [ { name: 'Living Room', size: 'large' }, { name: 'Guest Room', size: 'medium' }, { name: 'Bath', size: 'small' } ] }
+      { name: 'Floor 15 - Unit A4', rooms: [ { name: 'Living Room', size: 'large' }, { name: 'Guest Room', size: 'medium' }, { name: 'Bath', size: 'small' } ] }
     ],
     modelPath: '/src/assets/tower_house_design.glb'
   },
@@ -26,7 +26,7 @@ const sampleData = [
     floors: [
       { name: 'Floor 12 - Unit B1', rooms: [ { name: 'Living Room', size: 'large' }, { name: 'Kitchen', size: 'medium' }, { name: 'Bedroom 1', size: 'medium' } ] },
       { name: 'Floor 12 - Unit B2', rooms: [ { name: 'Living Room', size: 'large' }, { name: 'Bedroom 1', size: 'medium' }, { name: 'Bedroom 2', size: 'medium' } ] },
-      { name: 'Floor 11 - Unit B3', rooms: [ { name: 'Living Room', size: 'large' }, { name: 'Kitchen', size: 'medium' }, { name: 'Bath', size: 'small' } ] }
+      { name: 'Floor 12 - Unit B3', rooms: [ { name: 'Living Room', size: 'large' }, { name: 'Kitchen', size: 'medium' }, { name: 'Bath', size: 'small' } ] }
     ],
     modelPath: '/src/assets/tower_house_design.glb'
   },
@@ -39,7 +39,7 @@ const sampleData = [
     floors: [
       { name: 'Floor 20 - Unit C1', rooms: [ { name: 'Living Room', size: 'large' }, { name: 'Kitchen', size: 'large' }, { name: 'Master Bed', size: 'large' } ] },
       { name: 'Floor 20 - Unit C2', rooms: [ { name: 'Living Room', size: 'large' }, { name: 'Guest Room', size: 'medium' }, { name: 'Bath 1', size: 'small' } ] },
-      { name: 'Floor 19 - Unit C3', rooms: [ { name: 'Studio', size: 'large' }, { name: 'Kitchen', size: 'small' }, { name: 'Bath', size: 'small' } ] }
+      { name: 'Floor 20 - Unit C3', rooms: [ { name: 'Studio', size: 'large' }, { name: 'Kitchen', size: 'small' }, { name: 'Bath', size: 'small' } ] }
     ],
     modelPath: '/src/assets/tower_house_design.glb'
   },
@@ -63,6 +63,7 @@ const sampleData = [
 export default function Sidebar({ onSelect, gltfRef, onNodeSelect, selectedNode }) {
   return (
     <div className={styles.sidebar}>
+      <div className={styles.sectionHeader}>Building Nodes</div>
       <NodesPanel 
         gltfRef={gltfRef}
         onNodeSelect={onNodeSelect}

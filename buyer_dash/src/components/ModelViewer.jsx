@@ -1,9 +1,9 @@
 import { useGLTF, OrbitControls, Stage, Html } from '@react-three/drei';
 import { Canvas, useThree } from '@react-three/fiber';
-import { Suspense, useEffect, useRef, useState } from 'react';
+import { Suspense, useEffect, useRef, useState, forwardRef } from 'react';
 import { Vector3, Box3 } from 'three';
 import "../css/LoadingSpinner.css";
-import debugStyles from '../css/DebugPanel.module.css';
+
 
 function LoadingSpinner() {
   return <div className="spinner" />;
@@ -11,10 +11,15 @@ function LoadingSpinner() {
 
 function LoadedModel({ gltfRef }) {
   // load gltf and store its scene reference for parent to inspect
-  const gltf = useGLTF('/src/assets/tower_house_design.glb');
+  // use import.meta.url so Vite treats the .glb as an asset (avoid parsing it as JS)
+  const url = new URL('../assets/tower_house_design.glb', import.meta.url).href;
+  const gltf = useGLTF(url);
   useEffect(() => {
     if (gltf && gltf.scene && gltfRef) {
       gltfRef.current = gltf.scene;
+      // debug: log that model loaded
+      // eslint-disable-next-line no-console
+      console.log('LoadedModel: scene set on gltfRef', gltf.scene);
     }
   }, [gltf, gltfRef]);
 
@@ -123,9 +128,27 @@ function CameraController({ selection, gltfRef, controlsRef }) {
   return null;
 }
 
-export default function ModelViewer({ selection: externalSelection, onNodesUpdate }) {
+const ModelViewer = forwardRef(function ModelViewer({ selection: externalSelection, onNodeSelect }, ref) {
   const controlsRef = useRef();
   const gltfRef = useRef(null);
+  
+  // Forward the gltfRef to parent through ref (support function or object refs)
+  useEffect(() => {
+    if (!ref) return;
+    try {
+      if (typeof ref === 'function') {
+        // pass the ref object so parent can read .current as it changes
+        ref(gltfRef);
+      } else if (typeof ref === 'object') {
+        // set parent's ref.current to the same scene when available
+        // (we don't overwrite the ref object itself)
+        // assign current when model loads
+        if (gltfRef.current) ref.current = gltfRef.current;
+      }
+    } catch (e) {
+      // ignore
+    }
+  }, [ref, gltfRef.current]);
   const [selectedNode, setSelectedNode] = useState(null);
   const [selection, setSelection] = useState(externalSelection);
 
@@ -146,22 +169,16 @@ export default function ModelViewer({ selection: externalSelection, onNodesUpdat
 
     if (targetNode) {
       setSelection({ nodeId: targetNode.uuid });
+      if (onNodeSelect) {
+        onNodeSelect(node);
+      }
     }
   };
-
-  // Make gltfRef available to parent component for NodesPanel
-  useEffect(() => {
-    if (onNodesUpdate) {
-      onNodesUpdate(gltfRef);
-    }
-  }, [gltfRef, onNodesUpdate]);
 
   return (
     <div style={{ width: '100%', height: '100%', position: 'relative' }}>
       <Canvas shadows camera={{ position: [0, 0, 8], fov: 50 }}>
-    {/* Wrap DOM fallback in <Html> so it isn't injected directly into the R3F scene
-      (raw DOM like <div> inside Canvas causes the "Div is not part of THREE" error) */}
-    <Suspense fallback={<Html style={{ pointerEvents: 'none' }}><LoadingSpinner /></Html>}>
+        <Suspense fallback={<Html style={{ pointerEvents: 'none' }}><LoadingSpinner /></Html>}>
           <Stage environment="city" intensity={0.6}>
             <LoadedModel gltfRef={gltfRef} />
           </Stage>
@@ -171,4 +188,6 @@ export default function ModelViewer({ selection: externalSelection, onNodesUpdat
       </Canvas>
     </div>
   );
-}
+});
+
+export default ModelViewer;

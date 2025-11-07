@@ -1,3 +1,12 @@
+.sectionHeader {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 16px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #B7410E;
+}
+
 .sidebar {
     width: 300px;
     height: calc(100vh - 80px); /* Adjust based on your navbar height */
