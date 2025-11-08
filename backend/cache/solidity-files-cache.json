@@ -2,8 +2,8 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "/home/shravan/coding/clg_projects/sock_it/sock_it/backend/contracts/PropertyContract.sol": {
-      "lastModificationDate": 1762536781907,
-      "contentHash": "12985db6c695d7be4a6c3a56e8ae0a72",
+      "lastModificationDate": 1762555674186,
+      "contentHash": "3b21ded722a240d16626ef07cb620b8d",
       "sourceName": "contracts/PropertyContract.sol",
       "solcConfig": {
         "version": "0.8.28",

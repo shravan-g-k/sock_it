@@ -12,10 +12,10 @@ import "@openzeppelin/contracts/proxy/Clones.sol";
 contract PropertyNFT is ERC721 {
     string private _baseTokenURI;
     uint256 public totalRooms;
-    address public builder;
+    address public owner;
     bool private initialized;
     
-    event PropertyInitialized(address indexed builder, uint256 totalRooms);
+    event PropertyInitialized(address indexed owner, uint256 totalRooms);
     
     constructor() ERC721("Property", "PROP") {
         // Implementation contract - not initialized
@@ -23,30 +23,30 @@ contract PropertyNFT is ERC721 {
     
     /**
      * @notice Initialize the cloned contract
-     * @param _builder Address receiving all NFTs
+     * @param _owner Address receiving all NFTs
      * @param _totalRooms Number of rooms in property
      * @param baseURI IPFS base URI (e.g., "ipfs://QmHash/")
      */
     function initialize(
-        address _builder,
+        address _owner,
         uint256 _totalRooms,
         string memory baseURI
     ) external {
         require(!initialized, "Already initialized");
-        require(_builder != address(0), "Invalid builder");
+        require(_owner != address(0), "Invalid owner address");
         require(_totalRooms > 0, "Need at least 1 room");
         
         initialized = true;
-        builder = _builder;
+        owner = _owner;
         totalRooms = _totalRooms;
         _baseTokenURI = baseURI;
-        
-        // Mint all room NFTs to builder
+
+        // Mint all room NFTs to owner
         for (uint256 i = 1; i <= _totalRooms; i++) {
-            _mint(_builder, i);
+            _mint(_owner, i);
         }
-        
-        emit PropertyInitialized(_builder, _totalRooms);
+
+        emit PropertyInitialized(_owner, _totalRooms);
     }
     
     /**
@@ -139,24 +139,27 @@ contract PropertyNFTFactory {
      * - etc.
      */
     function createProperty(
+        address _owner,
         uint256 totalRooms,
         string memory baseURI
     ) external returns (address propertyContract) {
+
+        require(_owner != address(0), "Invalid owner address");
         // Clone the implementation
         propertyContract = implementation.clone();
         
         // Initialize the clone
         PropertyNFT(propertyContract).initialize(
-            msg.sender,
+            _owner,
             totalRooms,
             baseURI
         );
         
         // Track the property
         allProperties.push(propertyContract);
-        builderProperties[msg.sender].push(propertyContract);
+        builderProperties[_owner].push(propertyContract);
         
-        emit PropertyCreated(propertyContract, msg.sender, totalRooms, block.timestamp);
+        emit PropertyCreated(propertyContract, _owner, totalRooms, block.timestamp);
         
         return propertyContract;
     }
