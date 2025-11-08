@@ -1,0 +1,463 @@
+/* ------------------------------------------------------
+    GLOBAL
+-------------------------------------------------------*/
+body {
+  margin: 0;
+  font-family: "Inter", sans-serif;
+  background: #fcfdfd; /* Changed background to near-white */
+  color: #1a1a1a;
+}
+
+.container{
+  align-items: center;
+}
+
+h1 {
+  font-size: 26px;
+  font-weight: 700;
+  margin-bottom: 6px;
+  color: #1a1a1a;
+  align-items: right;
+}
+
+h2 {
+  align-items: right;
+  font-size: 20px;
+  font-weight: 600;
+  color: #222;
+  margin-bottom: 16px;
+}
+
+p {
+  color: #0b0b0b;
+}
+
+p3 {
+  color: white;
+}
+
+/* ------------------------------------------------------
+    HEADER
+-------------------------------------------------------*/
+.main-header {
+  /* Updated gradient using the terracotta color */
+  color: rgb(138, 51, 4);
+  padding: 14px 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  /* Accent border color */
+  border-bottom: 3px solid #a83e10;
+}
+  
+
+.logo-area {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.profile-area {
+  position: relative;
+}
+
+/* Profile button */
+.profile-button {
+  background: #e95b19; /* Darker shade for contrast */
+  border-radius: 10px;
+  padding: 8px 16px;
+  color: rgb(253, 251, 251);
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: 0.25s ease;
+}
+
+.profile-button:hover {
+  background: #aa4114; /* Lighter accent on hover */
+}
+
+/* Dropdown */
+.profile-dropdown {
+  position: absolute;
+  top: 60px;
+  right: 0;
+  width: 240px;
+  background: #fff;
+  border-radius: 14px;
+  padding: 8px 0;
+  box-shadow: 0 8px 22px rgba(0,0,0,0.15);
+  opacity: 0;
+  transform: translateY(-10px);
+  pointer-events: none;
+  transition: 0.25s ease;
+  z-index: 10;
+}
+
+.profile-dropdown.show {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.dropdown-item {
+  background: none;
+  border: none;
+  width: 100%;
+  padding: 12px 18px;
+  text-align: left;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  font-size: 15px;
+  cursor: pointer;
+  transition: 0.22s ease;
+}
+
+.dropdown-item:hover {
+  background: #fff0e7; /* Light background on hover */
+}
+
+.dropdown-item.logout {
+  color: #8b3208; /* Terracotta for logout action */
+}
+
+/* ------------------------------------------------------
+    LAYOUT
+-------------------------------------------------------*/
+.container {
+  padding: 50px;
+  max-width: 1800px;
+  margin: 5px;
+}
+
+.content-wrapper {
+  display: flex;
+  gap: 40px;
+  margin-top: 4px;
+}
+
+.left-column {
+  flex: 1;
+}
+
+.right-column-extended {
+  flex: 1;
+}
+
+/* ------------------------------------------------------
+    CARD UI
+-------------------------------------------------------*/
+.card {
+  /* Lightened background for better contrast with the white body */
+  background: #f7f3f1; 
+  border-radius: 50px;
+  padding: 44px;
+  margin-bottom: 26px;
+  padding-left: 28px;
+  /* Dark accent border */
+  border: 3px solid #8b3208; 
+  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+  transition: 0.25s ease;
+  margin-bottom: 30px;
+  padding-bottom: 40px;
+}
+
+.right-column-extended{
+  padding-top: 0px;
+  height: 70px;
+
+}
+
+.card:hover {
+  box-shadow: 0 10px 28px rgba(0,0,0,0.11);
+}
+
+/* ------------------------------------------------------
+    FORM INPUTS
+-------------------------------------------------------*/
+label {
+  font-weight: 500;
+  margin-top: 14px;
+  display: block;
+  margin-bottom: 4px;
+  color: #222;
+}
+
+input,
+select {
+  width: 100%;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid #c8c8c8;
+  font-size: 15px;
+  transition: 0.2s;
+}
+
+input:focus,
+select:focus {
+  /* Accent color on focus */
+  border-color: #8b3208; 
+  box-shadow: 0 0 0 2px #8b320833;
+  outline: none;
+}
+
+.inline-fields {
+  display: flex;
+  gap: 20px;
+}
+
+.field-group {
+  flex: 1;
+}
+
+/* Error input */
+.error-input {
+  /* Keeping standard error red */
+  border-color: #ff3b3b !important;
+  box-shadow: 0 0 0 2px #ff3b3b33 !important;
+}
+
+/* ------------------------------------------------------
+    LEGAL DOC UPLOAD
+-------------------------------------------------------*/
+.hashing-section {
+  /* Dashed border uses a lighter shade of the accent */
+  border: 2px dashed #b79f97; 
+  border-radius: 14px;
+  padding: 24px;
+  text-align: center;
+  background: #f1efef;
+  transition: 0.25s ease;
+}
+
+.drag-highlight {
+  /* Darker accent for drag highlight */
+  background: #5c2006 !important; 
+  border-color: #8b3208 !important;
+  color: white;
+}
+
+.immutable-hash {
+  margin-top: 16px;
+  font-weight: 600;
+}
+
+/* Error section */
+.error-section {
+  /* Keeping standard error red */
+  border-color: #ff3b3b !important;
+  background: #f8e8e8 !important; 
+}
+
+/* Select files button */
+.select-files-button {
+  /* Accent color for the button */
+  background: #8b3208; 
+  color: white; /* Changed text color to white for contrast */
+  padding: 10px 18px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 15px;
+  margin-top: 10px;
+  transition: 0.25s;
+}
+
+.select-files-button:hover {
+  background: #a83e10; /* Lighter accent on hover */
+}
+
+/* ------------------------------------------------------
+    DIGITAL TWIN VIEWER
+-------------------------------------------------------*/
+.model-preview-section {
+  margin-top: 20px;
+}
+
+.model-viewer-container {
+  width: 100%;
+  height: 260px;
+  border-radius: 14px;
+  /* Retaining black background for 3D model contrast */
+  background: #000; 
+  border: 1px solid #2a2a2a;
+  overflow: hidden;
+  position: relative;
+  margin-top: 14px;
+}
+
+#removeModelButton {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: rgba(0,0,0,0.45);
+  color: white; /* Changed text color for contrast */
+  border: none;
+  padding: 6px 8px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+#removeModelButton:hover {
+  background: rgba(0,0,0,0.7);
+}
+
+/* ------------------------------------------------------
+    REGISTER BUTTON (BOTTOM)
+-------------------------------------------------------*/
+.center-button-area {
+  margin-top: 38px;
+  display: flex;
+  justify-content: center;
+}
+
+.register-button {
+  /* Gradient with the new color scheme */
+  background: #db5213;
+  color: rgb(214, 207, 207);
+  padding: 16px 26px;
+  font-size: 17px;
+  border: none;
+  border-radius: 14px;
+  cursor: pointer;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  transition: 0.25s ease;
+  /* Shadow uses the main accent color */
+  box-shadow: 0 4px 14px rgba(139, 50, 8, 0.35); 
+}
+
+.register-button:hover {
+  transform: translateY(-4px);
+  /* Lighter shadow on hover */
+  box-shadow: 0 6px 22px rgba(168, 62, 16, 0.45); 
+}
+.model-preview-section{
+  height: 700px;
+}
+
+.hashing-section{
+  height: 270px;
+}
+
+.model-viewer-container{
+  height: 400px;
+}
+/* ------------------------------------------------------
+    FOOTER
+-------------------------------------------------------*/
+.low-profile-footer {
+  text-align: center;
+  padding: 20px;
+  /* Gradient uses the new color scheme */
+  background: linear-gradient(135deg, #5c2006, #8b3208); 
+  color: white; /* Ensure text is visible */
+  font-size: 14px;
+  border-top: 1px solid #e0e0e0;
+}
+.card-block-3-extended{
+  height: 917px;
+  /* Lightened background for better contrast with the white body */
+  background: #f7f3f1; 
+  border-radius: 50px;
+  padding: 44px;
+  margin-bottom: 26px;
+  padding-left: 28px;
+  /* Dark accent border */
+  border: 3px solid #8b3208; 
+  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+  transition: 0.25s ease;
+  margin-bottom: 30px;
+  padding-bottom: 40px;
+}
+
+/* ------------------------------------------------------
+    RESPONSIVE DESIGN
+-------------------------------------------------------*/
+@media (max-width: 900px) {
+  .content-wrapper {
+    flex-direction: column;
+  }
+
+  .inline-fields {
+    flex-direction: column;
+  }
+
+  .container {
+    padding: 20px;
+  }
+}
+/* SignIn.css */
+.SignInContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #41424128;
+  font-family: 'Arial', sans-serif;
+  background-color: rgba(27, 27, 27, 0.185);
+}
+.box{
+  padding: 20px;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(27, 27, 27, 0);
+  width: 400px;
+}
+.SignInContainer .heading {
+  font-size: 2rem;
+  margin-bottom: 2rem;
+  color: #8b3208;
+  margin-bottom: 5px;
+  text-align: center;
+  font-weight: bold;
+}
+
+.SignInBtn {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem; /* space between icon and text */
+  background-color: white;
+  color: #a83e10;
+  font-weight: 600;
+  font-size: 1.2rem;
+  padding: 0.8rem 2rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 10px rgba(139, 50, 8, 0.4);
+  width:80%;
+  margin-top: 20px;
+}
+h3{
+  text-align: center;
+  color: #aa4114;
+}
+.SignInBtn:hover {
+  background-color: white;
+  transform: scale(1.05);
+}
+
+.SignInBtn:hover {
+  transition: scale(1.05);
+}
+
+.metamask-icon svg {
+  width: 24px;
+  height: 24px;
+}
+h1{
+  margin: 0px;
+}
